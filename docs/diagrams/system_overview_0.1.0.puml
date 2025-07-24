@@ -1,0 +1,38 @@
+' System Overview - MVP
+' 0.1.0
+@startuml
+'skinparam backgroundcolor transparent
+package "Server (SpringBoot)" {
+  [Authentication]
+  [REST API]
+  [MesageBrokerController]
+}
+
+node "Scraper" {
+  [ScraperController] --> HTTPS
+  [UserAssistant] -> WEBSOCKET
+}
+
+cloud {
+  [WWW]
+}
+
+database "PostgreSQL" {
+  [MesageBroker]
+  frame "page_alert" {
+    [users]
+    [urls]
+    [user_has_urls]
+    [notifications]
+  }
+}
+
+node FrontEnd
+
+[REST API] <--> [page_alert]
+[HTTPS] ..> [WWW]
+[MesageBrokerController] <--> [MesageBroker]
+[ScraperController] <--> [MesageBroker]
+[FrontEnd] <--> [WEBSOCKET]
+[FrontEnd] <--> [REST API]
+@enduml

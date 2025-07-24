@@ -1,0 +1,25 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Scripts específicos con sus finales de línea apropiados
+/mvnw text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.sh text eol=lf
+
+# Archivos de código siempre LF (estándar del equipo)
+*.java text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.xml text eol=lf
+*.properties text eol=lf
+*.md text eol=lf
+*.gitignore text eol=lf
+
+# Archivos binarios
+*.jar binary
+*.war binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
