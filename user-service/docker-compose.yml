@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # user-service-db
+  user-service-db:
+    container_name: user-service-db
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${PGDATA}
+    networks:
+      - internal  
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ${VOLUME_PATH}:${PGDATA}
+    restart: unless-stopped
+  # user-service-app
+  app:
+    build: ./
+    depends_on:
+      - user-service-db  # Will wait for DB to be ready
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      SPRING_SQL_INIT_MODE: ${SPRING_SQL_INIT_MODE}
+    networks:
+      - internal
+    ports:
+      - "4000:4000"
+networks:
+  internal:
+    name: internal
