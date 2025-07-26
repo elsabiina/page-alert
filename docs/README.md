@@ -1,38 +1,23 @@
-# Documentación `page_alert`
+# Presentación
 
-## Prerequisitos
+![logo page-alert](./assets/logo.png)
 
-Se asume que el SO utilizado es Linux.
+## Objetivos
 
-### Dependencias
+El proyecto `page-alert` es un proyecto personal que intenta aunar diferentes tecnologías en las que estoy interesado:
 
-> - [dbml-render](https://github.com/softwaretechnik-berlin/dbml-renderer) Generación de svg a partir de archivos dbml (Diagrama ER de base de datos).
->   - Necesita NodeJS
-> - [PlantUML](https://github.com/plantuml/plantuml): Convertir plantUML a PNG
->   - Necesita JAVA
-> - [Pandoc](https://pandoc.org/): Convertir docunentación a pdf
+- Arquitectura Microservicios
+- Docker
+- OAuth
+- Seguridad
 
-### Pasos a seguir
+El Objetivo princial de este sistema es el de ofrecer una herramienta al público en general en la que un usuario pueda hacer un seguimiento de páginas web en las que tenga interés. El sistema se encargará de avisar al usuario cuando algún cambio se produzca en las páginas que sigue.
 
-#### Instalar dependencias de Node globales
+## Funcionalidades principales
 
-```bash
-# Dependencias para diagaramas de Base de datos
-npm install -g @dbml/cli @softwaretechnik/dbml-renderer
-
-# Dependiencias para la generación de pdfs
-sudo apt install -y pandoc texlive-full librsvg2-bin
-```
-
-#### Instalación de plantUML
-
-> [Instrucciones online oficiales](https://plantuml.com/es/starting)
-
-1. Visita [la página de descarga](https://plantuml.com/es/download) para descargar la última versión del `.jar`
-2. Ejecutar el script de instalación que se encargará de instalar `graphviz` y `plantuml`
-
-```bash
-sudo ./install_plantuml.sh [PATH_TO_DOWNLOAD_PLANTUML_JAR]
-```
-
-#### Instrucciones para la generación de documentación
+- Login de usuario.
+- Lista de páginas y reglas de usuario.
+- Ayuda 'interactiva' para la creación de reglas.
+- CRUD de páginas y reglas.
+- Monitoreo recurrente de las páginas.
+- Notificación por la vía configurada de los cambios encontrados.

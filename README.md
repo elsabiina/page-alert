@@ -4,6 +4,8 @@
 Un *sandbox* donde exploro las tecnologías que veo por el Internet, intenando implementar microservicios lo más independientes posible.  
 **Mi Objetivo** es aprender, romper (-me la cabeza) y arreglarla (o no 😅).  
 
+En estos años como desarrollador centrado en el ***Front End***  el síndrome del impostor no me ha abandonado. Es por esto que empecé un curso de OOP con Java y este proyecto es el resultado final.
+
 ## 🛠 **Tecnologías Usadas**  
 
 ### 🤖 **Backend**  

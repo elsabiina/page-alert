@@ -1,0 +1,82 @@
+@startgantt
+!theme carbon-gray
+language es
+printscale daily zoom 4
+saturday are closed
+sunday are closed
+Project starts 2025/07/18
+2025/07/19 to 2025/07/20 are named [Finde infernal] and is colored Bisque
+2025/07/26 to 2025/07/27 are named [Finde infernal] and is colored Bisque
+2025/07/26 is open
+2025/07/27 is open
+
+
+[Análisis y diseño] as [TASK1] requires 2 days
+then [Diseño prototipo] as [TASK2] requires 2 days
+[Prototipo acabado] as [EVENT1] happens 2025/07/23
+
+[Testing] as [TASK3] starts at [EVENT1]'s end and requires 1 days
+[Testing] as [TASK3] starts at [EVENT1]'s end and requires 1 days
+
+
+-- Fase Implementación --
+[user-service] as [TASK4] starts at [EVENT1]'s end and requires 2 days
+
+[EC Documentación] as [EVENT2] happens 2025/07/25
+
+[auth-service] as [TASK5] starts 2025/07/25 and requires 1 days
+[api-guard] as [TASK6] starts 2025/07/26 and requires 1 days
+[scraper-service] as [TASK7] starts 2025/07/27 and requires 2 days
+[notification-service] as [TASK8] starts 2025/07/28 and requires 1 days
+[RPC communication] as [TASK9] starts 2025/07/28 and requires 2 days
+[ui] starts 2025/07/29 and requires 1 days 
+
+-- Fase Integración --
+[Final Crazy Countdown] as [EVENT3] happens 2025/07/29
+[Integración] as [TASK11] starts 2025/07/30 and requires 1 days
+[Despliege] as [TASK12] starts 2025/07/30 and requires 1 days
+[Preparación demo] as [TASK13] starts 2025/07/30 and requires 1 days
+[Documentación proyecto] as [TASK14] starts 2025/07/30 and requires 1 days
+
+[Demo Final] as [EVENT4] happens 2025/07/31
+
+[EVENT1] -> [TASK5]
+[EVENT1] -> [TASK7]
+[EVENT1] -> [TASK8]
+
+[EVENT3] -> [TASK11]
+[EVENT3] -> [TASK12]
+[EVENT3] -> [TASK13]
+[EVENT3] -> [TASK14]
+
+' Research and Documentation
+[TASK1] is colored in Lavender/LightBlue
+[TASK2] is colored in Lavender/LightBlue
+[TASK14] is colored in Lavender/LightBlue
+
+'Operations
+[TASK12] is colored in Salmon/pink
+[TASK13] is colored in Salmon/pink
+
+'Testing
+[TASK3] is colored in %lighten("yellow", 20)/black
+[TASK11] is colored in %lighten("yellow", 20)/black
+
+[TASK9] is colored in %lighten("orange", 20)
+[ui] is colored in AquaMarine
+
+[TASK11] is 0% complete
+[TASK12] is 0% complete
+[TASK13] is 0% complete
+[TASK14] is 50% complete
+<style>
+document {
+    BackgroundColor white
+  }
+ganttdiagram {
+    BackgroundColor white
+    FontColor black
+  }
+</style>
+@endgantt
+
