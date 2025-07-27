@@ -1,6 +1,7 @@
 package es.oscasais.pa.userService.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +41,14 @@ public class UserController {
     return ResponseEntity.ok().body(users);
   }
 
+  @GetMapping("/{id}")
+  @Operation(summary = "Ge an user by id")
+  public ResponseEntity<UserResponseDTO> getUser(@PathVariable UUID id) {
+    UserResponseDTO user = userService.findUser(id);
+
+    return ResponseEntity.ok().body(user);
+  }
+
   @PostMapping
   @Operation(summary = "Create a new User")
   public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
@@ -50,7 +59,7 @@ public class UserController {
 
   @PutMapping("/{id}")
   @Operation(summary = "Update an existing User")
-  public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id,
+  public ResponseEntity<UserResponseDTO> updateUser(@PathVariable UUID id,
       @Validated({ Default.class }) @RequestBody UserRequestDTO userRequestDTO) {
 
     UserResponseDTO userResponseDTO = userService.updateUser(id,
@@ -61,7 +70,7 @@ public class UserController {
 
   @DeleteMapping("/{id}")
   @Operation(summary = "Delete an existing User")
-  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
     userService.deleteUser(id);
     return ResponseEntity.noContent().build();
   }
