@@ -1,4 +1,9 @@
 <!-- docs/_sidebar.md -->
 
-- [Inicio](/)
-- [Planificación](1_planification.md "Planificación del proyecto")
+- [Presentación](./readme.md)
+- [Planificación](./1_planification.md)
+- [Diseño y análisis](./2_design_analysis.md)
+- [Implementación](./3_implementation.md)
+- [Pruebas](./4_tests.md)
+- [Despliegue](./5_deploy.md)
+- [Seguimiento](./6_follow_up.md)

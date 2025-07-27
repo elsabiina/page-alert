@@ -1,8 +1,8 @@
 <!-- _coverpage.md -->
 
-![logo](assets/icon.png)
+![logo](assets/logo.png)
 
 > Documentación para desarrolladores
 
 [GitHub](https://github.com/docsifyjs/docsify/)
-[Documentación](#documentación-page_alert)
+[Documentación](#presentación)

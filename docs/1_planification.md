@@ -1,8 +1,18 @@
 # Planificación
 
+<!--toc:start-->
+- [Cronograma](#cronograma)
+- [Recursos necesarios](#recursos-necesarios)
+- [Requisitos funcionales generales](#requisitos-funcionales-generales)
+- [Dependencias generales](#dependencias-generales)
+- [Requisitos funcionales: alcance según versiones](#requisitos-funcionales-alcance-según-versiones)
+- [Requisitos no funcionales](#requisitos-no-funcionales)
+- [Dependencias](#dependencias)
+<!--toc:end-->
+
 ## Cronograma
 
-![cronograma](./diagrams/cronogram.png)
+![cronograma](./assets/cronogram.png)
 
 ## Recursos necesarios
 
@@ -40,7 +50,7 @@ A futuro con la versión `0.2.0` nos integraremos con una herramienta externa qu
 
 ## Requisitos funcionales: alcance según versiones
 
-#### `0.1.0`
+### `0.1.0`
 
 - **Notificaciones**
   - Email

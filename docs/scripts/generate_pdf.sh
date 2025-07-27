@@ -1,72 +1,67 @@
-#!/bin/bash
-# =============================================
-# Auto-Sorted Markdown to PDF Converter
-# Usage: ./generate_pdf.sh /path/to/markdown/files
-# Output: /path/to/markdown/files/pdf/documentation.pdf
-# =============================================
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Check if path argument is provided
-if [ -z "$1" ]; then
-    echo "ERROR: Please specify the directory containing Markdown files"
-    echo "Usage: $0 /path/to/files"
-    exit 1
-fi
+[ -z "$1" ] && {
+  echo "Uso: $0 /ruta/a/markdown"
+  exit 1
+}
 
-INPUT_DIR="$(realpath "$1")"  # Get absolute path
-OUTPUT_DIR="${INPUT_DIR}/pdf"
-OUTPUT_FILE="${OUTPUT_DIR}/documentation.pdf"
-TEMPLATE="eisvogel"  # Remove if not using template
+INPUT_DIR="$(realpath "$1")"
+OUTPUT_DIR="$INPUT_DIR/pdf"
+OUTPUT_FILE="$OUTPUT_DIR/documentation.pdf"
+METADATA_FILE="$INPUT_DIR/pdf_metadata.yaml"
+FILTER_FILE="$INPUT_DIR/assets/strip-caption.lua"
 
-# Verify directory exists
-if [ ! -d "$INPUT_DIR" ]; then
-    echo "ERROR: Directory not found: $INPUT_DIR"
-    exit 1
-fi
-
-# Check pandoc
-if ! command -v pandoc &>/dev/null; then
-    echo "ERROR: pandoc is required but not installed."
-    echo "Install with:"
-    echo "  Ubuntu: sudo apt install pandoc texlive-xetex texlive-latex-extra"
-    echo "  Mac: brew install pandoc basictex"
-    exit 1
-fi
-
-# Create pdf subdirectory if needed
 mkdir -p "$OUTPUT_DIR"
 
-# Get sorted files (1_xxx.md, 2_yyy.md, etc.) - use absolute paths
-files=($(find "$INPUT_DIR" -maxdepth 1 -name "[0-9]_*.md" | sort -t_ -n -k1))
+# Lista ordenada
+files=()
+[ -f "$INPUT_DIR/_coverpage.md" ] && files+=("$INPUT_DIR/_coverpage.md")
+[ -f "$INPUT_DIR/README.md" ] && files+=("$INPUT_DIR/README.md")
+mapfile -t numbered < <(find "$INPUT_DIR" -maxdepth 1 -type f -name '[0-9]_*.md' | sort -t_ -n -k1)
+files+=("${numbered[@]}")
+[ ${#files[@]} -eq 0 ] && {
+  echo "No hay Markdown"
+  exit 1
+}
 
-if [ ${#files[@]} -eq 0 ]; then
-    echo "ERROR: No numbered Markdown files (1_xxx.md) found in $INPUT_DIR"
-    exit 1
-fi
+echo "Orden:"
+printf " • %s\n" "${files[@]##*/}"
 
-echo "Processing files in order:"
-printf "  • %s\n" "${files[@]##*/}"
+# Metadatos
+TITLE=${TITLE:-"Documentación del producto"}
+AUTHOR=${AUTHOR:-"Equipo de desarrollo"}
+VERSION=${VERSION:-"v1.0.0"}
+DATE=$(date +"%d/%m/%Y")
 
-# Generate PDF - Execute from INPUT_DIR to resolve relative paths
-echo "Generating PDF..."
-(
-  cd "$INPUT_DIR"
-  pandoc \
-    --from markdown \
-    --to pdf \
-    --template="$TEMPLATE" \
-    --toc \
-    --toc-depth=2 \
-    --number-sections \
-    --pdf-engine=xelatex \
-    -o "$OUTPUT_FILE" \
-    "${files[@]##*/}"  # Use only filenames since we're in the directory
-)
+# Preparar YAML temporal con colores
+cat >"$OUTPUT_DIR/_temp.yaml" <<EOF
+---
+title: "$TITLE"
+author: "$AUTHOR"
+date: "$DATE"
+version: "$VERSION"
+titlepage: true
+titlepage-color: "3C4043"
+titlepage-text-color: "FFFFFF"
+titlepage-rule-color: "4285F4"
+titlepage-rule-height: 2
+...
+EOF
 
-# Result
-if [ -f "$OUTPUT_FILE" ]; then
-    echo "SUCCESS: PDF generated at"
-    echo "  $OUTPUT_FILE"
-else
-    echo "ERROR: Failed to generate PDF"
-    exit 1
-fi
+# Filtro solo si existe
+FILTER_ARG=()
+[ -f "$FILTER_FILE" ] && FILTER_ARG=(--lua-filter="$FILTER_FILE")
+
+# Generar
+pandoc "${files[@]}" \
+  --metadata-file="$OUTPUT_DIR/_temp.yaml" \
+  --from markdown --to pdf \
+  --template=eisvogel \
+  --pdf-engine=xelatex \
+  --toc --toc-depth=3 --number-sections --listings \
+  "${FILTER_ARG[@]}" \
+  -o "$OUTPUT_FILE"
+
+rm -f "$OUTPUT_DIR/_temp.yaml"
+echo "✅ PDF → $OUTPUT_FILE"

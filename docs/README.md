@@ -1,6 +1,9 @@
 # Presentación
 
-![logo page-alert](./assets/logo.png)
+<!--toc:start-->
+- [Objetivos](#objetivos)
+- [Funcionalidades principales](#funcionalidades-principales)
+<!--toc:end-->
 
 ## Objetivos
 
@@ -8,6 +11,7 @@ El proyecto `page-alert` es un proyecto personal que intenta aunar diferentes te
 
 - Arquitectura Microservicios
 - Docker
+
 - OAuth
 - Seguridad
 
