@@ -1,6 +1,7 @@
 package es.oscasais.pa.userService.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,13 @@ public class UserService {
         .toList();
   }
 
+  public UserResponseDTO findUser(UUID id) {
+    User user = userRepository.findById(id).orElseThrow(
+        () -> new UserNotFoundException("User not found with ID: " + id));
+
+    return UserMapper.toDTO(user);
+  }
+
   public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
     if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
       throw new EmailAlreadyExistsException("User with email " + userRequestDTO.getEmail() + " already exists");
@@ -40,7 +48,7 @@ public class UserService {
     return UserMapper.toDTO(user);
   }
 
-  public UserResponseDTO updateUser(Long id,
+  public UserResponseDTO updateUser(UUID id,
       UserRequestDTO userRequestDTO) {
 
     User user = userRepository.findById(id).orElseThrow(
@@ -61,7 +69,7 @@ public class UserService {
     return UserMapper.toDTO(updatedUser);
   }
 
-  public void deleteUser(Long id) {
+  public void deleteUser(UUID id) {
     userRepository.deleteById(id);
   }
 

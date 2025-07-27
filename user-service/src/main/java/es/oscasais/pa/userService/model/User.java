@@ -1,6 +1,7 @@
 package es.oscasais.pa.userService.model;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,8 +20,8 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "users", schema = "public")
 public class User {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
 
   private String alias;
 
@@ -40,11 +41,11 @@ public class User {
   @Column(nullable = false)
   private Instant updatedAt;
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
