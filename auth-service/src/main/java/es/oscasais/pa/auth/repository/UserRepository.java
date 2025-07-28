@@ -1,6 +1,6 @@
-package com.pa.authservice.repository;
+package es.oscasais.pa.auth.repository;
 
-import com.pa.authservice.model.User;
+import es.oscasais.pa.auth.model.User;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,8 +1,8 @@
-package com.pa.authservice.controller;
+package es.oscasais.pa.auth.controller;
 
-import com.pa.authservice.dto.LoginRequestDTO;
-import com.pa.authservice.dto.LoginResponseDTO;
-import com.pa.authservice.service.AuthService;
+import es.oscasais.pa.auth.dto.LoginRequestDTO;
+import es.oscasais.pa.auth.dto.LoginResponseDTO;
+import es.oscasais.pa.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;

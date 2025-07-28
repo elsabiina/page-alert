@@ -1,4 +1,4 @@
-package com.pa.authservice.util;
+package es.oscasais.pa.auth.util;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

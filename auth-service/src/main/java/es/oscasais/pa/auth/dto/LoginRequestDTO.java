@@ -1,4 +1,4 @@
-package com.pa.authservice.dto;
+package es.oscasais.pa.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
