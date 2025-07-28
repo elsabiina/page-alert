@@ -1,5 +1,4 @@
 # Presentación
-
 <!--toc:start-->
 - [Objetivos](#objetivos)
 - [Funcionalidades principales](#funcionalidades-principales)
@@ -15,7 +14,7 @@ El proyecto `page-alert` es un proyecto personal que intenta aunar diferentes te
 - OAuth
 - Seguridad
 
-El Objetivo princial de este sistema es el de ofrecer una herramienta al público en general en la que un usuario pueda hacer un seguimiento de páginas web en las que tenga interés. El sistema se encargará de avisar al usuario cuando algún cambio se produzca en las páginas que sigue.
+El Objetivo principal de este sistema es el de ofrecer una herramienta al público en general en la que un usuario pueda hacer un seguimiento de páginas web en las que tenga interés. El sistema se encargará de avisar al usuario cuando algún cambio se produzca en las páginas que sigue.
 
 ## Funcionalidades principales
 
