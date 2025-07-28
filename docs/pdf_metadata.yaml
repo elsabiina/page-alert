@@ -1,0 +1,32 @@
+---
+title: 'Page Alert'
+subtitle: 'Documentación para desarrolladores'
+titlepage-footer: "Repositorio: https://github.com/elsabiina/page-alert"
+author: 'Óscar Casais López'
+date: '27/07/2025'
+lang: es
+version: 'v0.1.0'
+
+header-includes:
+  - |
+    \usepackage{xcolor}
+    \definecolor{pagealertgreen}{RGB}{66,185,131}
+    \hypersetup{
+      colorlinks   = true,
+      linkcolor    = pagealertgreen,
+      urlcolor     = pagealertgreen,
+      citecolor    = pagealertgreen,
+      filecolor    = magenta,
+      hidelinks    = false   % <-- fuerza que se vean
+    }
+
+titlepage: true
+titlepage-logo: "assets/logo.png"
+titlepage-color: "35495e"
+titlepage-rule-color: "42b883"
+titlepage-text-color: "FFFFFF"
+titlepage-rule-height: 2
+
+footer-left: "Versión: v0.1.0"
+footer-right: "27/07/2025"
+---

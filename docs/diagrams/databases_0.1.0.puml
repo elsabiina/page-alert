@@ -1,0 +1,101 @@
+@startuml
+!theme carbon-gray
+' Configuración general
+skinparam linetype ortho
+skinparam package {
+    BackgroundColor #F0F0F0
+    BorderColor #666666
+    FontStyle bold
+}
+
+' =========================================
+' user-service Schema
+' =========================================
+package "user_service" {
+    entity "users" {
+        + id : UUID <<PK>>
+        --
+        email : citext <<unique>> <<not null>>
+        alias : varchar(120)
+        avatar_url : text
+        created_at : timestamptz <<default now()>>
+        updated_at : timestamptz <<default now()>>
+        --
+        .. Índices ..
+        () "idx_user_email (email)" <<unique>>
+    }
+}
+
+' =========================================
+' auth-service Schema
+' =========================================
+package "auth_service" {
+    entity "users" {
+        + id : UUID <<PK>>
+        --
+        email : citext <<unique>> <<not null>>
+        password : text <<not null>>
+        created_at : timestamptz <<default now()>>
+        updated_at : timestamptz <<default now()>>
+        --
+        .. Índices ..
+        () "idx_user_email (email)" <<unique>>
+    }
+}
+
+' =========================================
+' scraper-service Schema
+' =========================================
+package "scraper_service" {
+    entity "urls" {
+        + id : UUID <<PK>>
+        --
+        user_id : UUID
+        url : text <<unique>> <<not null>>
+        bodyHash : text
+        selector : text
+        type_check : varchar(20) <<not null>>
+        price_min : decimal(12,2)
+        price_max : decimal(12,2)
+        created_at : timestamptz <<default now()>>
+        updated_at : timestamptz <<default now()>>
+        --
+        .. Índices ..
+        () "idx_user_urls (id, user_id)"
+    }
+}
+
+' =========================================
+' notification-service Schema
+' =========================================
+package "notification_service" {
+
+    enum "notification_type_enum" {
+        email
+        push
+    }
+
+    enum "notification_status_enum" {
+        pending
+        sent
+        failed
+    }
+
+    entity "notifications" {
+        + id : UUID <<PK>>
+        --
+        user_id : UUID <<not null>>
+        type : notification_type_enum <<not null>>
+        status : notification_status_enum <<default 'pending'>>
+        payload : jsonb <<not null>>
+        created_at : timestamptz <<default now()>>
+        updated_at : timestamptz <<default now()>>
+        --
+        .. Índices ..
+        () "idx_user_notifications_user_id (user_id)"
+        () "idx_user_notifications_status (status)"
+        () "idx_user_notifications_status (user_id, status)"
+    }
+}
+
+@enduml

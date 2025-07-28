@@ -1,39 +1,40 @@
 # Planificación
 
-## Objetivos
-
-La aplicación `page_alert` permite a usuarios conectarse a un sistema que se encargará de **monitorear** páginas web y de **avisarle** en caso de que alguna de las reglas (previamente definidas por el usuario) se cumpla.
-
-## Funcionalidades
-
-- Login de usuario.
-- Lista de páginas y reglas de usuario.
-- Ayuda 'interactiva' para la creación de reglas.
-- CRUD de páginas y reglas.
-- Monitoreo recurrente de las páginas.
-- Notificación por la vía configurada de los cambios encontrados.
+<!--toc:start-->
+- [Cronograma](#cronograma)
+- [Recursos necesarios](#recursos-necesarios)
+- [Requisitos funcionales generales](#requisitos-funcionales-generales)
+- [Dependencias generales](#dependencias-generales)
+- [Requisitos funcionales: alcance según versiones](#requisitos-funcionales-alcance-según-versiones)
+- [Requisitos no funcionales](#requisitos-no-funcionales)
+- [Dependencias](#dependencias)
+<!--toc:end-->
 
 ## Cronograma
 
-| Fase                                                  | Fechas    | Hitos                                                                                                                           |
-| ----------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Análisis y diseño                                     | 18-21 Jul | [&nbsp;] Diagramas UML (BD, JAVA) <br> [&nbsp;] Creación de script BD                                                           |
-| Implementación [Server](./2_design_analysis#Server)   | 22-23 Jul | [&nbsp;] Proyecto base con todas las dependencias [0.1.0](#dependencias-server-0.1.0) <br> [&nbsp;] Conexión con Base de Datos  <br> [&nbsp;] CRUD (users, notifications) |
-| Implementación [Scraper](./2_design_analysis#Scraper) | 24 Jul    | [&nbsp;] Proyecto base con todas las dependencias [0.1.0](#dependencias-scraper-0.1.0) <br> [&nbsp;] Conexión con Base de Datos <br> [&nbsp;] CRUD (urls, user_has_urls) |
+![cronograma](./assets/cronogram.png)
 
-## Detalle de versiones
+## Recursos necesarios
 
-### Requesitos generales `0.1.0`
+El `MVP` está planteado para desplegarlo solamente en local. Los recursos de personal son muy limitados (1 persona) y los recursos disponibles son un portátil Intel Core i7 con 16GB de RAM.
 
-- **Notificaciones**
-  - Email
-  - Push
-- **Reglas de Monitoreo**:
-  - Toda la página: `bodyHash`
-  - Elemento/s concrectos: `['css-selector']`
-  - Precio (automático)
+A priori los microservicios no deberían de consumir muchos recursos ya que no tienen procesos pesados. El proceso más intensivo sin lugar a dudas es responsabilidad del `scraper-service` pero para la Demo del día 31/072025 solamente trabajará contra el localhost y en intervalos fácilmente asequibles.  
 
-### Dependencias Server `0.1.0`
+A futuro con la versión `0.2.0` nos integraremos con una herramienta externa que hará todo este proceso de manera externa.
+
+## Requisitos funcionales generales
+
+- Login de usuario vía email/pass y SSO:
+  - CRUD cuenta de usuario y sus preferencias para las notificaciones.
+- Lista de páginas y reglas de usuario.
+  - CRUD URLs y reglas de monitoreo.
+- Ayuda interactiva del sistema para la creación de reglas.
+- Monitoreo recurrente de las páginas.
+- Notificación por la vía configurada de los cambios encontrados.
+
+## Dependencias generales
+
+**Microservicios**  
 
 - Spring Security `Security`
 - PostgreSQL Driver `SQL`
@@ -43,14 +44,42 @@ La aplicación `page_alert` permite a usuarios conectarse a un sistema que se en
 - Spring Boot DevTools Developer `Tools` (para desarrollo: reloads, restarts...)
 - Validation `I/O`
 
-### Dependencias Scraper `0.1.0`
+**UI**  
 
-- TODO
+- TO BE DECIDED
 
-### Requesitos generales `0.2.0`
+## Requisitos funcionales: alcance según versiones
+
+### `0.1.0`
 
 - **Notificaciones**
+  - Email
+  - Push
+- **Reglas de Monitoreo** (localhost):
+  - Toda la página: `bodyHash`
+  - Elemento/s concretos (sin ayuda interactiva): `['css-selector']`  
+- **Interfaz** simple para acceso de usuarios y gestión de avisos.
+
+### `0.2.0` Requisitos generales
+
 - **Reglas de Monitoreo**:
   - Añadir **ayuda interactiva** para la creación de reglas:
-    - Elemento/s concrectos: `['css-selector']`
-    - Precio
+    - Elementos concretos: `['css-selector']`
+    - Precio automático
+- **Interfaz** con conexión interactiva con el servidor para la validación de reglas.
+
+## Requisitos no funcionales
+
+- El sistema debe operar en todo momento con protocolos seguros:
+  - HTTPS para la comunicación con el Front End.
+  - RPC entre microservicios.
+
+## Dependencias
+
+### `0.1.0` scraper-service
+
+- Playwright - localhost
+
+### `0.2.0` scraper-service
+
+- Integración con [changedetecion.io](https://github.com/dgtlmoon/changedetection.io)

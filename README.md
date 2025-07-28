@@ -4,6 +4,8 @@
 Un *sandbox* donde exploro las tecnologías que veo por el Internet, intenando implementar microservicios lo más independientes posible.  
 **Mi Objetivo** es aprender, romper (-me la cabeza) y arreglarla (o no 😅).  
 
+En estos años como desarrollador centrado en el ***Front End***  el síndrome del impostor no me ha abandonado. Es por esto que empecé un curso de OOP con Java y este proyecto es el resultado final.
+
 ## 🛠 **Tecnologías Usadas**  
 
 ### 🤖 **Backend**  
@@ -33,7 +35,7 @@ Un *sandbox* donde exploro las tecnologías que veo por el Internet, intenando i
 
 ## 🏗️ **Estructura del Proyecto**  
 
-He decido meterlo todo en un solo repo para facilitarme la vida. Cada Servicio es un proyecto de JAVA completamiente independiente así que se pueden descargar de manera individual.
+He decido meterlo todo en un solo repo para facilitarme la vida. Cada Servicio es un proyecto de JAVA completamente independiente así que se pueden descargar de manera individual.
 
 ```  
 ├── /api-guard            🔐 Autenticación y seguridad centralizada, Comunicación transparente para el FE  
@@ -42,12 +44,12 @@ He decido meterlo todo en un solo repo para facilitarme la vida. Cada Servicio e
 ├── /notification-service 👥 Avisa (email, push notification) a los usuarios de los cambios detectados en URLs que sigue   
 ├── /scraper-service      💬 CRON para hacer webScrapper + WebSockets (asistena al usuario para elección de reglas de Scrapping).  
 ├── /frontend             🖥️ Integración con auth-service  
-├── /docs                 📚 Swagger, arquitectura, diagrams, scripts de generación  la documentación mismia, etc.  
+├── /docs                 📚 Swagger,swagger arquitectura, diagrams, scripts de generación la documentación misma, etc.  
 ```  
 
 ## 🚦 **Cómo Arrancar el Proyecto**  
 
-1. **Clona el repo**:  
+1. **Clona el repositorio**:  
 
    ```bash  
    ```  

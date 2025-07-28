@@ -1,38 +1,96 @@
-' System Overview - MVP
-' 0.1.0
 @startuml
-'skinparam backgroundcolor transparent
-package "Server (SpringBoot)" {
-  [Authentication]
-  [REST API]
-  [MesageBrokerController]
+!theme cerulean
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 30
+left to right direction
+
+' === Frontend externo ===
+package "Externo" {
+  [<color:#FF6B6B>🏠 Frontend UI</color>] as UI #FFD8D8
 }
 
-node "Scraper" {
-  [ScraperController] --> HTTPS
-  [UserAssistant] -> WEBSOCKET
+' === Red interna ===
+package "Red Interna" #E3F2FD {
+  [<color:#1E88E5>🔒 API-GUARD</color>] as API_GUARD #BBDEFB
+  note top of API_GUARD
+    <b>API Gateway</b>
+    - Proxy inverso
+    - Valida autenticación
+    - Enruta peticiones
+    - Único punto de entrada
+  end note
+  
+  [<color:#FF9800>🔑 Auth Service</color>] as AUTH_SERVICE #FFE0B2
+  note top of AUTH_SERVICE
+    <b>Auth Service</b>
+    - Valida credenciales
+    - Gestiona sesiones
+    - Emite tokens JWT
+  end note
+  
+  [<color:#4CAF50>👤 User Service</color>] as USER_SERVICE #dbffde
+  note bottom of USER_SERVICE
+    <b>User Service</b>
+    - Gestión de usuarios
+    - Llamadas RPC a Scraper
+    - Publica eventos en Kafka
+  end note
+  
+  [<color:#9C27B0>🕷️ Scraper Service</color>] as SCRAPER_SERVICE #E1BEE7
+  note top of SCRAPER_SERVICE
+    <b>Scraper Service</b>
+    - Extracción de datos
+    - Recibe llamadas RPC
+    - Publica eventos en Kafka
+  end note
+  
+  [<color:#b8a609>📢 Notification Service</color>] as NOTIF_SERVICE #FFF9C4
+  note bottom of NOTIF_SERVICE
+    <b>Notification Service</b>
+    - Consume Kafka
+    - Envía notificaciones
+    - (Email, SMS, Push)
+  end note
+  
+  [<color:#78909C>📊 Kafka</color>] as KAFKA_QUEUE #ECEFF1
+  note right of KAFKA_QUEUE
+    <b>Kafka</b>
+    - Broker de mensajes
+    - Comunicación asíncrona
+  end note
+  
+  ' === Bases de datos ===
+  database "Auth DB" as AUTH_DB #FFCC80
+  database "User DB" as USER_DB #A5D6A7
+  database "Scraper DB" as SCRAPER_DB #CE93D8
+  database "Notif DB" as NOTIF_DB #FFF59D
 }
 
-cloud {
-  [WWW]
-}
+' === Conexiones ===
+UI -[#FF6B6B]-> API_GUARD
+API_GUARD -[#1E88E5]-> AUTH_SERVICE
+AUTH_SERVICE -[#FF9800]-> API_GUARD
 
-database "PostgreSQL" {
-  [MesageBroker]
-  frame "page_alert" {
-    [users]
-    [urls]
-    [user_has_urls]
-    [notifications]
-  }
-}
+API_GUARD -[#1E88E5]-> USER_SERVICE
+API_GUARD -[#1E88E5]-> SCRAPER_SERVICE
+API_GUARD -[#1E88E5]-> NOTIF_SERVICE
 
-node FrontEnd
+USER_SERVICE -[#4CAF50]-> SCRAPER_SERVICE : RPC
+USER_SERVICE -[#4CAF50]-> KAFKA_QUEUE
+SCRAPER_SERVICE -[#9C27B0]-> KAFKA_QUEUE
+KAFKA_QUEUE -[#78909C]-> NOTIF_SERVICE
 
-[REST API] <--> [page_alert]
-[HTTPS] ..> [WWW]
-[MesageBrokerController] <--> [MesageBroker]
-[ScraperController] <--> [MesageBroker]
-[FrontEnd] <--> [WEBSOCKET]
-[FrontEnd] <--> [REST API]
+USER_SERVICE -[#4CAF50]-> API_GUARD
+SCRAPER_SERVICE -[#9C27B0]-> API_GUARD
+NOTIF_SERVICE -[#FFEB3B]-> API_GUARD
+
+API_GUARD -[#1E88E5]-> UI
+
+' === Conexiones a Bases de Datos ===
+AUTH_SERVICE -[#FF9800]-> AUTH_DB
+USER_SERVICE -[#4CAF50]-> USER_DB
+SCRAPER_SERVICE -[#9C27B0]-> SCRAPER_DB
+NOTIF_SERVICE -[#FFEB3B]-> NOTIF_DB
+
 @enduml
