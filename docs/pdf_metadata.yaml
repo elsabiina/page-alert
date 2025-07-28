@@ -7,6 +7,19 @@ date: '27/07/2025'
 lang: es
 version: 'v0.1.0'
 
+header-includes:
+  - |
+    \usepackage{xcolor}
+    \definecolor{pagealertgreen}{RGB}{66,185,131}
+    \hypersetup{
+      colorlinks   = true,
+      linkcolor    = pagealertgreen,
+      urlcolor     = pagealertgreen,
+      citecolor    = pagealertgreen,
+      filecolor    = magenta,
+      hidelinks    = false   % <-- fuerza que se vean
+    }
+
 titlepage: true
 titlepage-logo: "assets/logo.png"
 titlepage-color: "35495e"
