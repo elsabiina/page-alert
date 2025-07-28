@@ -1,4 +1,4 @@
-package com.pa.authservice.dto;
+package es.oscasais.pa.auth.dto;
 
 public class LoginResponseDTO {
   private final String token;

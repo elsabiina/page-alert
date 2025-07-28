@@ -1,4 +1,4 @@
-package com.pa.authservice.model;
+package es.oscasais.pa.auth.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

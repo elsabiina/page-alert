@@ -1,4 +1,4 @@
-package com.pa.authservice.config;
+package es.oscasais.pa.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

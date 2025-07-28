@@ -1,7 +1,7 @@
-package com.pa.authservice.service;
+package es.oscasais.pa.auth.service;
 
-import com.pa.authservice.dto.LoginRequestDTO;
-import com.pa.authservice.util.JwtUtil;
+import es.oscasais.pa.auth.dto.LoginRequestDTO;
+import es.oscasais.pa.auth.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;

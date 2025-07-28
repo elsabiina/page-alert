@@ -1,7 +1,7 @@
-package com.pa.authservice.service;
+package es.oscasais.pa.auth.service;
 
-import com.pa.authservice.model.User;
-import com.pa.authservice.repository.UserRepository;
+import es.oscasais.pa.auth.model.User;
+import es.oscasais.pa.auth.repository.UserRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
