@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # auth-service-db
+  auth-service-db:
+    container_name: auth-service-db
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${PGDATA}
+    networks:
+      - internal  
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ${VOLUME_PATH}:${PGDATA}
+    restart: unless-stopped
+  # auth-service-app
+  app:
+    build: ./
+    depends_on:
+      - auth-service-db  # Will wait for DB to be ready
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL} 
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      SPRING_SQL_INIT_MODE: ${SPRING_SQL_INIT_MODE}
+      JWT_SECRET: ${JWT_SECRET} #  to work with the data.sql init data needs to be set correctly, otherwhise use custom sql
+
+    networks:
+      - internal
+    ports:
+      - "4005:4005"
+networks:
+  internal:
+    name: internal

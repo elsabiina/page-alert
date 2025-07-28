@@ -22,5 +22,6 @@
   </dependencies>
   <modules>
     <module>user-service</module>
+    <module>auth-service</module>
   </modules>
 </project>

@@ -42,10 +42,8 @@ local.properties
 
 # --- Environment ---
 # Spring Boot
-application.properties
-application.yml
-application-*.properties
-application-*.yml
+application-prod.properties
+application-prod.yml
 
 # Credentials and Env variables
 .env
