@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,9 +20,6 @@ public class User {
 
   @Column(nullable = false)
   private String password;
-
-  @Column(nullable = false)
-  private String role;
 
   public UUID getId() {
     return id;
@@ -46,13 +43,5 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public String getRole() {
-    return role;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
   }
 }

@@ -22,10 +22,16 @@ public class AuthService {
   }
 
   public Optional<String> authenticate(LoginRequestDTO loginRequestDTO) {
+    userService.findByEmail(loginRequestDTO.getEmail())
+        .ifPresent(u -> {
+          System.out.println("Hash en BD: |" + u.getPassword() + "|");
+          System.out.println("Longitud: " + u.getPassword().length());
+        });
+
     Optional<String> token = userService.findByEmail(loginRequestDTO.getEmail())
         .filter(u -> passwordEncoder.matches(loginRequestDTO.getPassword(),
             u.getPassword()))
-        .map(u -> jwtUtil.generateToken(u.getEmail(), u.getRole()));
+        .map(u -> jwtUtil.generateToken(u.getEmail()));
 
     return token;
   }
@@ -34,7 +40,7 @@ public class AuthService {
     try {
       jwtUtil.validateToken(token);
       return true;
-    } catch (JwtException e){
+    } catch (JwtException e) {
       return false;
     }
   }

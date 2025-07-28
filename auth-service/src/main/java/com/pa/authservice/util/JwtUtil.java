@@ -23,12 +23,11 @@ public class JwtUtil {
     this.secretKey = Keys.hmacShaKeyFor(keyBytes);
   }
 
-  public String generateToken(String email, String role) {
+  public String generateToken(String email) {
     return Jwts.builder()
         .subject(email)
-        .claim("role", role)
         .issuedAt(new Date())
-        .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 *10)) // 10 hours
+        .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 1)) // 1 hour -- TODO change when prod
         .signWith(secretKey)
         .compact();
   }
