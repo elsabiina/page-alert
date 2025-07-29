@@ -8,12 +8,26 @@ spring:
         locator:
           enabled: true
       routes:
+        #
+        # authorization-service-routes
+        #
         - id: auth-service-route
           uri: http://auth-service:4005 #/api/auth will be routed here for the auth-service
           predicates:
             - Path=/auth/**
           filters:
             - StripPrefix=1 # Will strip the `api` part becuase authcontroller listens at `/auth`
+        #
+        # user-service-routes
+        #
+        - id: public-create-user-account
+          # This endpoints won't require a JWT
+          uri: http://user-service:4000
+          predicates:
+            - Path=/api/users/create-user-account
+          filters:
+            - StripPrefix=1
+            - RemoveRequestHeader=Authorization
         - id: user-service-route
           uri: http://user-service:4000 #/api/users will be routed here for the users-service
           predicates:
@@ -25,8 +39,8 @@ spring:
 
 logging:
   level: 
-    root: debug
-    org.springframework: debug
-    org.hibernate: warn
-
+    root: info
+    # org.springframework: debug
+    # org.hibernate: warn
+    #
 
