@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+
+-- Use the inserts only to populate it the first time or for test
+
 -- Inserts para tabla users
 -- 20 inserts con UUIDs explícitos
 INSERT INTO users (id, email, alias, avatar_url) VALUES
