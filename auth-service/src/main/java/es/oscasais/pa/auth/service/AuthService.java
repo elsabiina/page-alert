@@ -3,6 +3,7 @@ package es.oscasais.pa.auth.service;
 import es.oscasais.pa.auth.dto.LoginRequestDTO;
 import es.oscasais.pa.auth.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
+
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,6 @@ public class AuthService {
   }
 
   public Optional<String> authenticate(LoginRequestDTO loginRequestDTO) {
-    userService.findByEmail(loginRequestDTO.getEmail())
-        .ifPresent(u -> {
-          System.out.println("Hash en BD: |" + u.getPassword() + "|");
-          System.out.println("Longitud: " + u.getPassword().length());
-        });
-
     Optional<String> token = userService.findByEmail(loginRequestDTO.getEmail())
         .filter(u -> passwordEncoder.matches(loginRequestDTO.getPassword(),
             u.getPassword()))
