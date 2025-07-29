@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api-guard:
+    container_name: api-guard
+    image: api-guard:latest
+    environment:
+      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL}
+    networks:
+      - internal  
+    ports:
+      - "4010:4010"
+networks:
+  internal:
+    external: true
+    name: internal

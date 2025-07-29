@@ -15,7 +15,7 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 30s
-      timeout: 10s
+      timeout: 30s
       retries: 5
     ports:
       - "${POSTGRES_PORT}:5432"
@@ -24,6 +24,7 @@ services:
     restart: unless-stopped
   # user-service-app
   app:
+    container_name: user-service
     build: ./
     depends_on:
       - user-service-db  # Will wait for DB to be ready
@@ -35,8 +36,10 @@ services:
       SPRING_SQL_INIT_MODE: ${SPRING_SQL_INIT_MODE}
     networks:
       - internal
-    ports:
-      - "4000:4000"
+      # Port binding will be handled by the api-guard
+    # ports:
+    #   - "4000:4000"
 networks:
   internal:
     name: internal
+    external: true
