@@ -1,13 +1,16 @@
 package es.oscasais.pa.auth.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
 import es.oscasais.pa.auth.dto.LoginRequestDTO;
 import es.oscasais.pa.auth.dto.LoginResponseDTO;
 import es.oscasais.pa.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,7 @@ public class AuthController {
 
   private final AuthService authService;
 
+  @Autowired
   public AuthController(AuthService authService) {
     this.authService = authService;
   }
@@ -28,7 +32,7 @@ public class AuthController {
   @Operation(summary = "Generate token on user login")
   @PostMapping("/login")
   public ResponseEntity<LoginResponseDTO> login(
-      @RequestBody LoginRequestDTO loginRequestDTO,
+      @Valid @RequestBody LoginRequestDTO loginRequestDTO,
       HttpServletRequest request) {
 
     Optional<String> tokenOptional = authService.authenticate(loginRequestDTO);
@@ -38,10 +42,7 @@ public class AuthController {
     }
 
     String token = tokenOptional.get();
-
-    // Session will be used to get logged in user info
-    HttpSession session = request.getSession(true);
-    session.setAttribute("user", loginRequestDTO.getEmail());
+    authService.createUserSession(loginRequestDTO, token, request);
 
     return ResponseEntity.ok(new LoginResponseDTO(token));
   }
@@ -59,5 +60,26 @@ public class AuthController {
     return authService.validateToken(authHeader.substring(7))
         ? ResponseEntity.ok().build()
         : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+  }
+
+  @Operation(summary = "Creates an user account and login auth")
+  @PostMapping("/create-me")
+  public ResponseEntity<LoginResponseDTO> createUser(
+      @Valid @RequestBody LoginRequestDTO loginRequestDTO,
+      HttpServletRequest request) {
+
+    Optional<String> tokenOptional = authService.authenticate(loginRequestDTO);
+
+    // User found on DB
+    if (!tokenOptional.isEmpty()) {
+
+      return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
+    }
+
+    // create auhtorized user
+    authService.createUser(loginRequestDTO, request);
+    tokenOptional = authService.authenticate(loginRequestDTO);
+
+    return ResponseEntity.ok(new LoginResponseDTO(tokenOptional.get()));
   }
 }
