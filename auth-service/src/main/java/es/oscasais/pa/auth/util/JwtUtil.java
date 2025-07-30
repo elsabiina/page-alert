@@ -21,13 +21,14 @@ public class JwtUtil {
     byte[] keyBytes = Base64.getDecoder()
         .decode(secret.getBytes(StandardCharsets.UTF_8));
     this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+
   }
 
   public String generateToken(String email) {
     return Jwts.builder()
         .subject(email)
         .issuedAt(new Date())
-        .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 1)) // 1 hour -- TODO change when prod
+        .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 1)) // 1 hour -- TODO: change when prod
         .signWith(secretKey)
         .compact();
   }
