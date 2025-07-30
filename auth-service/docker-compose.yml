@@ -29,12 +29,13 @@ services:
     depends_on:
       - auth-service-db  # Will wait for DB to be ready
     networks:
-      - internal  
+      - internal
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL} 
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      USER_SERVICE_URL: ${USER_SERVICE_URL}
       JWT_SECRET: ${JWT_SECRET} #  to work with the data.sql init data needs to be set correctly, otherwhise use custom sql
     # ports:
     #   - "4005:4005"

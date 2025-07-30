@@ -19,3 +19,8 @@ COPY --from=builder ./app/target/auth-service-0.0.1-SNAPSHOT.jar ./app.jar
 EXPOSE 4005
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# For remote debugging - Comment above ENTRYPOINT and Uncomment below
+# EXPOSE 8080
+# EXPOSE 5005
+# ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]

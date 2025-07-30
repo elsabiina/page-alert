@@ -1,7 +1,6 @@
 spring:
   application:
     name: auth-service
-
 #   h2:
 #     console:
 #       # If needed to access de /h2-console please change this to true and add the spring.security.enabled: false (in order to by pass it)
@@ -22,8 +21,13 @@ spring:
 #   sql:
 #     init:
 #       mode: always
-# jwt: 
-#   secret: ${JWT_SECRET}
+
+jwt: 
+  secret: ${JWT_SECRET}
+
+user:
+  service:
+    url: ${USER_SERVICE_URL}
 
 server:
   port: 4005
@@ -31,4 +35,5 @@ server:
 logging:
   level:
     root: info
-
+    # org:
+    #   springframework: DEBUG

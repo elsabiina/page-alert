@@ -23,5 +23,6 @@
   <modules>
     <module>user-service</module>
     <module>auth-service</module>
+    <module>api-guard</module>
   </modules>
 </project>
