@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: scraper-service
+  ports:
+    - "4015:4015"
+  # sql:
+  #   init:
+  #     mode: ALWAYS
+  # jpa:
+  #   database-platform: org.hibernate.dialect.H2Dialect
+  #   hibernate:
+  #     ddl-auto: update
+  #
+  # datasource:
+  #   url: jdbc:h2:mem:testdb
+  #   driver-class-name: org.h2.Driver
+  #   username: developer
+  #   password: password
+
+# h2:
+#   console:
+#     # If needed to access /h2-console, change this to true and set spring.security.enabled: false to bypass it
+#     enabled: false
+#     path: /h2-console
+
+server:
+  port: 4015
+  
+scraper:
+  url: ${SCRAPER_URL}
+  api:
+    key: ${SCRAPER_API_KEY}
+
+logging:
+  level:
+    root: info

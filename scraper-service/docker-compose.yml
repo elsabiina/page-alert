@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # scraper-service-db
+  scraper-service-db:
+    container_name: scraper-service-db
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${PGDATA}
+    networks:
+      - internal  
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ${VOLUME_PATH}:${PGDATA}
+    restart: unless-stopped
+  # scraper-service-app
+  app:
+    container_name: scraper-service
+    build: ./
+    depends_on:
+      - scraper-service-db  # Will wait for DB to be ready
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      SCRAPER_URL: ${SCRAPER_URL}
+      SCRAPER_API_KEY: ${SCRAPER_API_KEY}
+    networks:
+      - internal
+      # Port binding will be handled by the api-guard
+    ports:
+      - "4015:4015"
+networks:
+  internal:
+    name: internal
+    external: true
