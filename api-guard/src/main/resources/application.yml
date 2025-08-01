@@ -36,6 +36,21 @@ spring:
             - StripPrefix=1 # Will strip the `api` part becuase authcontroller listens at `/users`
             - JwtValidation # Must match Srping naming convention. Request will passed to <filterName>GatewayFilterFactory
 
+        - id: scraper-service-route
+          uri: http://scraper-service:4015 #/api/users will be routed here for the users-service
+          predicates:
+            - Path=/api/urls/**
+          filters:
+            - StripPrefix=1 # Will strip the `api` part becuase authcontroller listens at `/users`
+            # - JwtValidation # Must match Srping naming convention. Request will passed to <filterName>GatewayFilterFactory
+        - id: scraper-route
+          uri: http://scraper:5000 #/api/users will be routed here for the users-service
+          predicates:
+            - Path=/scraper/**
+          filters:
+            - StripPrefix=1 # Will strip the `api` part becuase authcontroller listens at `/users`
+            # - JwtValidation # Must match Srping naming convention. Request will passed to <filterName>GatewayFilterFactory
+
 
 logging:
   level: 
