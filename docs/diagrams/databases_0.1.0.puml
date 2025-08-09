@@ -52,9 +52,10 @@ package "scraper_service" {
         --
         user_id : UUID
         url : text <<unique>> <<not null>>
+        title: text
         bodyHash : text
         selector : text
-        type_check : varchar(20) <<not null>>
+        type_check : varchar(20) <<not null>> <<default 'ANY'>>
         price_min : decimal(12,2)
         price_max : decimal(12,2)
         created_at : timestamptz <<default now()>>

@@ -7,6 +7,7 @@ import es.oscasais.pa.auth.dto.LoginRequestDTO;
 import es.oscasais.pa.auth.dto.LoginResponseDTO;
 import es.oscasais.pa.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "Auth", description = "API for managing Authentication")
 public class AuthController {
 
   private final AuthService authService;
