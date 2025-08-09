@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import es.oscasais.pa.scraper.dto.ApiUrlDTO;
 import es.oscasais.pa.scraper.dto.UrlDTO;
-import es.oscasais.pa.scraper.mappper.ApiUrlMapper;
+import es.oscasais.pa.scraper.mapper.ApiUrlMapper;
+import es.oscasais.pa.scraper.mapper.UrlMapper;
 import es.oscasais.pa.scraper.model.Url;
 import es.oscasais.pa.scraper.repository.ScraperApiRepository;
 import es.oscasais.pa.scraper.repository.ScraperRepository;
@@ -27,27 +28,41 @@ public class ScraperService {
   }
 
   @Transactional
-  public List<UrlDTO> getAllUrls() {
-    List<ApiUrlDTO> urls = apiRepo.getAllUrls();
+  public List<UrlDTO> getAllUrls(String userId) {
+    UUID id = UUID.fromString(userId);
+    List<ApiUrlDTO> urls = apiRepo.getUrlsByUserId(id);
     List<UrlDTO> apiUrls = urls.stream()
-      .map(ApiUrlMapper::toUrlDTO)
-      .toList();
+        .map(ApiUrlMapper::toUrlDTO)
+        .toList();
 
-    List<UrlDTO> paUrls = repo.findAll().stream()
-      .map(ApiUrlMapper::toUrlDTO)
-      .toList();
-    
-    return ApiUrlMapper.syncDTOs(apiUrls, paUrls);
+    List<UrlDTO> paUrls = repo.getByUserId(id).stream()
+        .map(UrlMapper::toDTO)
+        .toList();
+
+    return UrlMapper.syncDTOs(apiUrls, paUrls);
   }
 
-  @Transactional
-  public List<UrlDTO> getUrlsByUserId(UUID userId) {
-    List<ApiUrlDTO> urls = apiRepo.getUrlsByUserId(userId);
+  public UrlDTO createUrl(String userId, UrlDTO url) {
 
-    List<UrlDTO> apiUrls = urls.stream()
-      .map(ApiUrlMapper::toUrlDTO)
-      .toList();
+    url.setUserId(userId);
 
-    return ApiUrlMapper.syncDTOs(apiUrls, repo.getUrlsByUserId(userId));
+    Url urlWatched = repo.save(UrlMapper.toModel(url));
+
+    return UrlMapper.toDTO(urlWatched);
+  }
+
+  public UrlDTO updateUrl(String userId, UrlDTO url) {
+
+    url.setUserId(userId);
+  
+    Url urlWatched = repo.save(UrlMapper.toModel(url));
+
+    return UrlMapper.toDTO(urlWatched);
+  }
+
+  public void deleteUrl(String urlId) {
+    UUID id = UUID.fromString(urlId);
+
+    repo.deleteById(id);
   }
 }

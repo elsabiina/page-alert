@@ -3,7 +3,7 @@ title: 'Page Alert'
 subtitle: 'Documentación para desarrolladores'
 titlepage-footer: "Repositorio: https://github.com/elsabiina/page-alert"
 author: 'Óscar Casais López'
-date: '27/07/2025'
+date: '01/08/2025'
 lang: es
 version: 'v0.1.0'
 
@@ -28,5 +28,5 @@ titlepage-text-color: "FFFFFF"
 titlepage-rule-height: 2
 
 footer-left: "Versión: v0.1.0"
-footer-right: "27/07/2025"
+footer-right: "01/08/2025"
 ---
