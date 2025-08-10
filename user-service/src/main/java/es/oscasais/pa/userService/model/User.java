@@ -33,6 +33,9 @@ public class User {
   @URL
   private String avatarUrl;
 
+  @Column(nullable = false, columnDefinition = "boolean default false")
+  private boolean emailConfirmed = false;
+
   @CreationTimestamp
   @Column(nullable = false, updatable = false)
   private Instant createdAt;
@@ -71,6 +74,14 @@ public class User {
 
   public void setAvatarUrl(String avatarUrl) {
     this.avatarUrl = avatarUrl;
+  }
+
+  public boolean isEmailConfirmed() {
+    return emailConfirmed;
+  }
+
+  public void setEmailConfirmed(boolean emailConfirmed) {
+    this.emailConfirmed = emailConfirmed;
   }
 
   public Instant getCreatedAt() {

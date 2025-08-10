@@ -1,7 +1,16 @@
 spring:
   application:
     name: user-service
-
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    consumer:
+      group-id: user-service 
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: "userevent:es.oscasais.pa.userService.dto.kafka.UserEventDTO, userconfirmationevent:es.oscasais.pa.userService.dto.kafka.EmailConfirmationEventDTO"
 #   h2:
 #     console:
 #       # If needed to access de /h2-console please change this to true and add the spring.security.enabled: false (in order to by pass it)

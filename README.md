@@ -49,19 +49,110 @@ He decido meterlo todo en un solo repo para facilitarme la vida. Cada Servicio e
 
 ## 🚦 **Cómo Arrancar el Proyecto**  
 
+### 🚀 **Opción 1: Sistema Completo con Scripts (Work in progres)**
+
 1. **Clona el repositorio**:  
 
    ```bash  
+   git clone <repository-url>
+   cd page-alert
    ```  
 
-2. **Levanta los servicios**:  
+2. **Configura las variables de entorno** para TODOS los servicios. Por ejemplo en `notification-service/.env`:
+
+   ```bash
+   # Edita notification-service/.env
+   SPRING_MAIL_USERNAME=tu-email@gmail.com
+   SPRING_MAIL_PASSWORD=tu-app-password
+   ```
+
+3. **Levanta todos los servicios** usando los scripts de ayuda:  
 
    ```bash  
+   # Modo Desarrollo (con Swagger habilitado)
+   ./start-all.sh up        # Linux/Mac
+   start-all.bat up         # Windows
+   
+   # Modo Producción (Swagger deshabilitado por seguridad)
+   ./start-all.sh prod      # Linux/Mac
+   start-all.bat prod       # Windows
+   
+   # O directamente con Docker Compose
+   docker-compose up --build  # Desarrollo
    ```  
 
-3. **Accede a los servicios**:  
-   - API Docs: `http://localhost:<PORT>/swagger-ui/index.html`  
-   - Frontend: `http://localhost:3000`  
+4. **Gestiona los servicios**:
+
+   ```bash
+   ./start-all.sh up       # Desarrollo con Swagger habilitado
+   ./start-all.sh prod     # Producción con Swagger deshabilitado
+   ./start-all.sh down     # Parar todos los servicios  
+   ./start-all.sh logs     # Ver logs en tiempo real
+   ./start-all.sh restart  # Reiniciar todos los servicios
+   ./start-all.sh build    # Construir todas las imágenes
+   ./start-all.sh help     # Mostrar ayuda
+   ```
+
+5. **Accede al sistema**:  
+   - **API Gateway**: `http://localhost:4010` (único punto de entrada)
+   - **Frontend**: `http://localhost:3000` (cuando esté disponible)
+
+### 🔧 **Opción 2: Desarrollo de Servicios Individuales**
+
+Cada servicio mantiene su propio `.env` y `docker-compose.yml` para desarrollo independiente. Asegurate de tener todas ls variables de entorno en el `.env` y luego corre por ejeamplo para el `auth-service`:
+
+```bash
+cd auth-service
+docker-compose up --build
+# Usa su propia BD PostgreSQL y configuración
+```
+
+### 📚 **Documentación API**
+
+⚠️ **Importante**: Los endpoints de Swagger están **deshabilitados en producción** por seguridad.
+
+#### **🔧 Modo Desarrollo (`./start-all.sh up`)**
+
+| Servicio | Desarrollo Individual |
+|------------------------|----------------------|
+| **Hub de Documentación** | - |
+| **Auth Service** | `http://localhost:4005/swagger-ui/index.html` |
+| **User Service** | `http://localhost:4000/swagger-ui/index.html` |
+| **Notification Service** | `http://localhost:4020/swagger-ui/index.html` |
+| **Scraper Service** | `http://localhost:4015/swagger-ui/index.html` |
+
+### 📊 **Puertos y Acceso**
+
+| Servicio | Puerto Interno | Puerto Externo | Desarrollo Individual | Acceso |
+|----------|----------------|----------------|----------------------|---------|
+| API Gateway | 4010 | 4010 | - | ✅ Público |
+| Auth Service | 4005 | - | 4005 | 🔒 Solo interno |
+| User Service | 4000 | - | 4000 | 🔒 Solo interno |
+| Notification Service | 4020 | - | 4020 | 🔒 Solo interno |
+| Scraper Service | 4015 | - | 4015 | 🔒 Solo interno |
+
+### 📁 **Estructura de Configuración**
+
+```
+page-alert/
+├── docker-compose.yml          # Configuración base (Kafka + API Gateway)
+├── docker-compose.override.yml # Orquestación de servicios individuales
+├── docker-compose.prod.yml     # Configuración específica de producción
+├── start-all.sh               # Script de ayuda Linux/Mac
+├── start-all.bat              # Script de ayuda Windows
+├── auth-service/
+│   ├── .env                   # Variables específicas del servicio
+│   └── docker-compose.yml     # Configuración independiente
+├── user-service/
+│   ├── .env                   # Variables específicas del servicio  
+│   └── docker-compose.yml     # Configuración independiente
+├── notification-service/
+│   ├── .env                   # Variables específicas del servicio
+│   └── docker-compose.yml     # Desarrollo + integración
+└── api-guard/
+    └── src/main/resources/
+        └── application.yml     # Perfiles development/production
+```
 
 ## 🤔 **¿Por Qué Este Proyecto?**  
 

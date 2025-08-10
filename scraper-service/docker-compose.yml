@@ -27,7 +27,8 @@ services:
     container_name: scraper-service
     build: ./
     depends_on:
-      - scraper-service-db  # Will wait for DB to be ready
+      scraper-service-db:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import es.oscasais.pa.auth.dto.LoginRequestDTO;
 import es.oscasais.pa.auth.dto.LoginResponseDTO;
 import es.oscasais.pa.auth.service.AuthService;
+import es.oscasais.pa.auth.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -25,10 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final AuthService authService;
+  private final UserService userService;
 
   @Autowired
-  public AuthController(AuthService authService) {
+  public AuthController(AuthService authService, UserService userService) {
     this.authService = authService;
+    this.userService = userService;
   }
 
   @Operation(summary = "Generate token on user login")
@@ -64,24 +67,20 @@ public class AuthController {
         : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
   }
 
-  @Operation(summary = "Creates an user account and login auth")
+  @Operation(summary = "Creates a user account and sends email confirmation")
   @PostMapping("/create-me")
-  public ResponseEntity<LoginResponseDTO> createUser(
+  public ResponseEntity<String> createUser(
       @Valid @RequestBody LoginRequestDTO loginRequestDTO,
       HttpServletRequest request) {
 
     Optional<String> tokenOptional = authService.authenticate(loginRequestDTO);
 
-    // User found on DB
     if (!tokenOptional.isEmpty()) {
-
       return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
     }
 
-    // create auhtorized user
-    authService.createUser(loginRequestDTO, request);
-    tokenOptional = authService.authenticate(loginRequestDTO);
+    userService.createUser(loginRequestDTO, request);
 
-    return ResponseEntity.ok(new LoginResponseDTO(tokenOptional.get()));
+    return ResponseEntity.ok("User created successfully. Please check your email to confirm your account.");
   }
 }

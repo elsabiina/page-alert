@@ -2,10 +2,10 @@ package es.oscasais.pa.userService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.kafka.annotation.EnableKafka;
 
-// TODO - DOCUMENTATION
-// Services: Business Logig
 @SpringBootApplication
+@EnableKafka
 public class UserServiceApplication {
 
   public static void main(String[] args) {

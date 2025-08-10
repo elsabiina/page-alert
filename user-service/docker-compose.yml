@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # user-service-db
   user-service-db:
@@ -27,12 +25,15 @@ services:
     container_name: user-service
     build: ./
     depends_on:
-      - user-service-db  # Will wait for DB to be ready
+      user-service-db:
+        condition: service_healthy
+
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
     networks:
       - internal
       # Port binding will be handled by the api-guard
@@ -41,4 +42,3 @@ services:
 networks:
   internal:
     name: internal
-    external: true

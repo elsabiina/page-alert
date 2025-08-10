@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # auth-service-db
   auth-service-db:
@@ -27,7 +25,8 @@ services:
     container_name: auth-service
     build: ./
     depends_on:
-      - auth-service-db  # Will wait for DB to be ready
+      auth-service-db:
+        condition: service_healthy
     networks:
       - internal
     environment:
@@ -36,11 +35,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
       USER_SERVICE_URL: ${USER_SERVICE_URL}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
       JWT_SECRET: ${JWT_SECRET} #  to work with the data.sql init data needs to be set correctly, otherwhise use custom sql
-    # ports:
-    #   - "4005:4005"
+    ports:
+      - "4005:4005"
 
 networks:
   internal:
     name: internal
-    external: true
