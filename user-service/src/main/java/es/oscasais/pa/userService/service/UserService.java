@@ -1,6 +1,7 @@
 package es.oscasais.pa.userService.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,14 @@ import es.oscasais.pa.userService.exception.UserNotFoundException;
 import es.oscasais.pa.userService.mapper.UserMapper;
 import es.oscasais.pa.userService.model.User;
 import es.oscasais.pa.userService.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService {
+  private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
   @Autowired
   private UserRepository userRepository;
 
@@ -41,9 +47,25 @@ public class UserService {
 
   public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
     if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
+      log.error("User could not be created. It already exists: " + userRequestDTO.getEmail());
       throw new EmailAlreadyExistsException("User with email " + userRequestDTO.getEmail() + " already exists");
     }
     User user = userRepository.save(UserMapper.toModel(userRequestDTO));
+
+    return UserMapper.toDTO(user);
+  }
+
+  @Transactional
+  public UserResponseDTO confirmUserEmail(UserRequestDTO dto) {
+    User user = userRepository
+        .findByEmail(dto.getEmail())
+        .orElseThrow(() -> {
+          log.error("User to be confirmed doesn't exist: {}", dto.getEmail());
+          return new UserNotFoundException("User to be confirmed doesn't exist: " + dto.getEmail());
+        });
+
+    user.setEmailConfirmed(true);
+    user = userRepository.save(user);
 
     return UserMapper.toDTO(user);
   }
@@ -54,11 +76,9 @@ public class UserService {
     User user = userRepository.findById(id).orElseThrow(
         () -> new UserNotFoundException("User not found with ID: " + id));
 
-    if (userRepository.existsByEmailAndIdNot(userRequestDTO.getEmail(),
-        id)) {
+    if (userRepository.existsByEmailAndIdNot(userRequestDTO.getEmail(), id)) {
       throw new EmailAlreadyExistsException(
-          "A user with this email " + "already exists"
-              + userRequestDTO.getEmail());
+          "A user with this email already exists: " + userRequestDTO.getEmail());
     }
 
     user.setEmail(userRequestDTO.getEmail());
