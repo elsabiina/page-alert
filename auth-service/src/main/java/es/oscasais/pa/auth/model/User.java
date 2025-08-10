@@ -21,6 +21,9 @@ public class User {
   @Column(nullable = false)
   private String password;
 
+  @Column(nullable = false, columnDefinition = "boolean default false")
+  private boolean emailConfirmed = false;
+
   public UUID getId() {
     return id;
   }
@@ -43,5 +46,13 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public boolean isEmailConfirmed() {
+    return emailConfirmed;
+  }
+
+  public void setEmailConfirmed(boolean emailConfirmed) {
+    this.emailConfirmed = emailConfirmed;
   }
 }

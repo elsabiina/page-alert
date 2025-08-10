@@ -40,4 +40,26 @@ public class GlobalExceptionHandler extends RuntimeException {
 
     return ResponseEntity.badRequest().body(errors);
   }
+
+  @ExceptionHandler(EmailAlreadyExistsException.class)
+  public ResponseEntity<Map<String, String>> handleEmailAlreadyExistsException(
+      EmailAlreadyExistsException ex) {
+
+    // Debuggin purpose
+    log.warn("Email address already exist {}", ex.getMessage());
+    Map<String, String> errors = new HashMap<>();
+    errors.put("message", "Email address already exists");
+
+    return ResponseEntity.badRequest().body(errors);
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<Map<String, String>> handleUserNotFoundException(
+      UserNotFoundException ex) {
+    log.warn("User not found {}", ex.getMessage());
+
+    Map<String, String> errors = new HashMap<>();
+    errors.put("message", "User not found");
+    return ResponseEntity.badRequest().body(errors);
+  }
 }
