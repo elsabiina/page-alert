@@ -1,0 +1,31 @@
+# Production override configuration
+services:
+  api-guard:
+    environment:
+      SPRING_PROFILES_ACTIVE: production
+    
+  # Production logging configuration
+  auth-service:
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      LOGGING_LEVEL_ROOT: warn
+      LOGGING_LEVEL_ES_OSCASAIS_PA: info
+
+  user-service:
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      LOGGING_LEVEL_ROOT: warn
+      LOGGING_LEVEL_ES_OSCASAIS_PA: info
+
+  notification-service:
+    environment:
+      SERVER_PORT: 4020
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      LOGGING_LEVEL_ROOT: warn
+      LOGGING_LEVEL_ES_OSCASAIS_PA: info
+
+  scraper-service:
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      LOGGING_LEVEL_ROOT: warn
+      LOGGING_LEVEL_ES_OSCASAIS_PA: info

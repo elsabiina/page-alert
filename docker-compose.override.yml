@@ -1,0 +1,72 @@
+services:
+  # Auth Service
+  auth-service-db:
+    extends:
+      file: ./auth-service/docker-compose.yml
+      service: auth-service-db
+    env_file:
+      - ./auth-service/.env
+
+  auth-service:
+    extends:
+      file: ./auth-service/docker-compose.yml
+      service: app
+    env_file:
+      - ./auth-service/.env
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+  # User Service
+  user-service-db:
+    extends:
+      file: ./user-service/docker-compose.yml
+      service: user-service-db
+    env_file:
+      - ./user-service/.env
+
+  user-service:
+    extends:
+      file: ./user-service/docker-compose.yml
+      service: app
+    env_file:
+      - ./user-service/.env
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+  # Notification Service (ajustado para red interna)
+  notification-service:
+    build: ./notification-service
+    env_file:
+      - ./notification-service/.env
+    depends_on:
+      - kafka
+    environment:
+      SERVER_PORT: 4020
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - internal
+
+  # Scraper Service (si existe)
+  scraper-service:
+    build: ./scraper-service
+    depends_on:
+      - kafka
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    networks:
+      - internal
+
+  # API Gateway (único punto de entrada)
+  api-guard:
+    build: ./api-guard
+    ports:
+      - "4010:4010"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-development}
+    depends_on:
+      - auth-service
+      - user-service
+      - notification-service
+      - scraper-service
+    networks:
+      - internal

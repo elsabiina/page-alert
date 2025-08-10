@@ -1,0 +1,39 @@
+services:
+  # Kafka Infrastructure (compartido)
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - internal
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - internal
+
+  # API Gateway (único punto de entrada)
+  api-guard:
+    build: ./api-guard
+    ports:
+      - "4010:4010"
+    depends_on:
+      - auth-service
+      - user-service
+      - notification-service
+      - scraper-service
+    networks:
+      - internal
+
+networks:
+  internal:
+    external: true
+    name: internal
