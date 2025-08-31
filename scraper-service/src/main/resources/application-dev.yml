@@ -1,0 +1,43 @@
+# Development profile configuration
+# Uses H2 in-memory database for local development
+spring:
+  profiles:
+    active: dev
+  
+  # H2 Database configuration for development
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  security:
+    enabled: false
+    headers:
+      frame: same-origin
+  datasource:
+    url: jdbc:h2:mem:scraperdb
+    driver-class-name: org.h2.Driver
+    username: developer
+    password: password
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  sql:
+    init:
+      mode: always
+
+server:
+  port: 4015
+  
+# Scraper configuration using environment variables
+scraper:
+  url: ${SCRAPER_URL:http://localhost:5000/api/v1}
+  api:
+    key: ${SCRAPER_API_KEY:default-api-key}
+
+logging:
+  level:
+    root: info
+    es.oscasais.pa.scraper: debug

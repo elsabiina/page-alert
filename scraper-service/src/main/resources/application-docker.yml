@@ -1,0 +1,44 @@
+# Docker profile configuration
+# Uses PostgreSQL database in Docker containers
+spring:
+  profiles:
+    active: docker
+  
+  # PostgreSQL Database configuration for Docker
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://scraper-service-db:5432/db}
+    username: ${SPRING_DATASOURCE_USERNAME:developer}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: false
+  sql:
+    init:
+      mode: always
+  
+  # Disable H2 console in Docker
+  h2:
+    console:
+      enabled: false
+  security:
+    enabled: false
+    headers:
+      frame: deny
+
+server:
+  port: 4015
+  
+# Scraper configuration using environment variables
+scraper:
+  url: ${SCRAPER_URL:http://scraper:5000/api/v1}
+  api:
+    key: ${SCRAPER_API_KEY:default-api-key}
+
+logging:
+  level:
+    root: info
+    es.oscasais.pa.scraper: info

@@ -1,36 +1,21 @@
+# Scraper Service Main Configuration
+# Default profile is 'dev' for local development with H2 database
 spring:
   application:
     name: scraper-service
-  ports:
-    - "4015:4015"
-  # sql:
-  #   init:
-  #     mode: ALWAYS
-  # jpa:
-  #   database-platform: org.hibernate.dialect.H2Dialect
-  #   hibernate:
-  #     ddl-auto: update
-  #
-  # datasource:
-  #   url: jdbc:h2:mem:testdb
-  #   driver-class-name: org.h2.Driver
-  #   username: developer
-  #   password: password
-
-# h2:
-#   console:
-#     # If needed to access /h2-console, change this to true and set spring.security.enabled: false to bypass it
-#     enabled: false
-#     path: /h2-console
+  profiles:
+    default: dev  # Default to development profile
 
 server:
   port: 4015
   
+# Common scraper configuration
 scraper:
-  url: ${SCRAPER_URL}
+  url: ${SCRAPER_URL:http://localhost:5000/api/v1}
   api:
-    key: ${SCRAPER_API_KEY}
+    key: ${SCRAPER_API_KEY:default-api-key}
 
+# Common logging configuration
 logging:
   level:
     root: info
