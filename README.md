@@ -107,6 +107,45 @@ docker-compose up --build
 # Usa su propia BD PostgreSQL y configuración
 ```
 
+### ⚙️ **Nuevos Perfiles de Spring Boot**
+
+Cada microservicio ahora soporta 3 perfiles diferentes:
+
+#### **🛠️ Perfil de Desarrollo (`dev`)**
+- **Base de datos**: H2 en memoria (sin instalación)
+- **URLs**: localhost para comunicación entre servicios
+- **Uso**: Desarrollo local rápido
+```bash
+cd auth-service
+./mvnw spring-boot:run  # Usa 'dev' por defecto
+# O explícitamente:
+./mvnw spring-boot:run -Dspring.profiles.active=dev
+```
+
+#### **🐳 Perfil Docker (`docker`)**  
+- **Base de datos**: PostgreSQL (contenedores)
+- **URLs**: Nombres de servicios de Docker para networking
+- **Uso**: Entorno containerizado
+```bash
+cd auth-service
+export SPRING_PROFILES_ACTIVE=docker
+docker-compose up --build
+```
+
+#### **🏭 Perfil Producción (`prod`)**
+- **Base de datos**: PostgreSQL optimizado 
+- **Configuración**: Pool de conexiones, logging mínimo, seguridad reforzada
+- **Uso**: Despliegue en producción
+```bash
+export SPRING_PROFILES_ACTIVE=prod
+./mvnw spring-boot:run
+```
+
+**Configuración de perfiles:**
+- Las variables de entorno siguen funcionando desde los archivos `.env`
+- Cada perfil tiene su archivo `application-{profile}.yml` específico
+- El archivo `application.yml` principal define el perfil por defecto como `dev`
+
 ### 📚 **Documentación API**
 
 ⚠️ **Importante**: Los endpoints de Swagger están **deshabilitados en producción** por seguridad.
