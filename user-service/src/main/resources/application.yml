@@ -1,43 +1,15 @@
+# User Service Main Configuration
+# Default profile is 'dev' for local development with H2 database
 spring:
   application:
     name: user-service
-  kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
-    consumer:
-      group-id: user-service 
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
-        spring.json.type.mapping: "userevent:es.oscasais.pa.userService.dto.kafka.UserEventDTO, userconfirmationevent:es.oscasais.pa.userService.dto.kafka.EmailConfirmationEventDTO"
-#   h2:
-#     console:
-#       # If needed to access de /h2-console please change this to true and add the spring.security.enabled: false (in order to by pass it)
-#       enabled: false
-#       path: /h2-console
-#   # security:
-#   #   enabled: false
-#   datasource:
-#     url: jdbc:h2:mem:testdb
-#     driver-class-name: org.h2.Driver
-#     username: developer
-#     password: password
-#
-jpa:
-  # database-platform: org.hibernate.dialect.H2Dialect
-  hibernate:
-    ddl-auto: update
-#   sql:
-#     init:
-#       mode: always
-# jwt: 
-#   secret: ${JWT_SECRET}
+  profiles:
+    default: dev  # Default to development profile
 
 server:
   port: 4000
 
+# Common logging configuration
 logging:
   level:
-    root: info
-
+    root: ${LOGGING_LEVEL:INFO}

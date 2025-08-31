@@ -51,7 +51,6 @@ public class UserService {
       throw new EmailAlreadyExistsException("User with email " + userRequestDTO.getEmail() + " already exists");
     }
     User user = userRepository.save(UserMapper.toModel(userRequestDTO));
-
     return UserMapper.toDTO(user);
   }
 
