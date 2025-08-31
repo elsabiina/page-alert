@@ -1,0 +1,30 @@
+# Development profile configuration
+# Uses H2 in-memory database for local development
+spring:
+  profiles:
+    active: dev
+  
+# No database configuration needed for API Gateway in dev profile
+# All other configurations inherit from main application.yml
+
+server:
+  port: 4010
+
+# Development-specific configurations
+jwt:
+  secret: ${JWT_SECRET:myDefaultSecretKeyThatShouldBeChangedInProduction123456789}
+  cookie:
+    name: ${JWT_COOKIE_NAME:authToken}
+    secure: false  # HTTP allowed in development
+    http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    same-site: ${JWT_COOKIE_SAME_SITE:Strict}
+    max-age: ${JWT_COOKIE_MAX_AGE:86400}  # 24 hours in seconds
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost:8080,http://localhost:4200}
+  allowed-credentials: ${CORS_ALLOWED_CREDENTIALS:true}
+
+logging:
+  level:
+    root: info
+    es.oscasais.pa.apiguard: debug

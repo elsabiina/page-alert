@@ -4,8 +4,8 @@ services:
   api-guard:
     container_name: api-guard
     image: api-guard:latest
-    environment:
-      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL}
+    env_file:
+      - .env
     networks:
       - internal  
     ports:
