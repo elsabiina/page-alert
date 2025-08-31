@@ -1,13 +1,15 @@
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL
+  password VARCHAR(255) NOT NULL,
+  email_confirmed BOOLEAN
 );
 
-INSERT INTO users (id, email, password)
+INSERT INTO users (id, email, password, email_confirmed)
 SELECT 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
        'test@example.com',
-       '$2a$12$FMVHO88LVWLLeovp0piTF.npMjYuHHPlZOlX0PZtM7hGuOmXyKcmK'
+       '$2a$12$adSyAaUgBO.dncyny9OkKezLqKtRaPn2YBIg6G5nYBHRriA5eND9u',
+      true
 WHERE NOT EXISTS (
     SELECT 1
     FROM users
@@ -16,6 +18,6 @@ WHERE NOT EXISTS (
 );
 -- It might login with:
 -- email: test@example.com
--- password: secret
+-- password: passwordcorrect
 -- https://bcrypt-generator.com/
 

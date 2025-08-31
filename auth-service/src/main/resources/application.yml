@@ -1,55 +1,26 @@
+# Auth Service Main Configuration
+# Default profile is 'dev' for local development with H2 database
 spring:
   application:
     name: auth-service
-  kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
-    consumer:
-      group-id: auth-service
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
-        spring.json.type.mapping: "userevent:es.oscasais.pa.auth.dto.kafka.UserEventDTO, userconfirmationevent:es.oscasais.pa.auth.dto.kafka.EmailConfirmationEventDTO"
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        spring.json.type.mapping: "userevent:es.oscasais.pa.auth.dto.kafka.UserEventDTO"
-
-#   h2:
-#     console:
-#       # If needed to access de /h2-console please change this to true and add the spring.security.enabled: false (in order to by pass it)
-#       enabled: false
-#       path: /h2-console
-#   # security:
-#   #   enabled: false
-#   datasource:
-#     url: jdbc:h2:mem:testdb
-#     driver-class-name: org.h2.Driver
-#     username: developer
-#     password: password
-#
-#   jpa:
-#     database-platform: org.hibernate.dialect.H2Dialect
-#     hibernate:
-#       ddl-auto: update
-#   sql:
-#     init:
-#       mode: always
-
-jwt: 
-  secret: ${JWT_SECRET}
-
-user:
-  service:
-    url: ${USER_SERVICE_URL}
+  profiles:
+    default: dev  # Default to development profile
 
 server:
   port: 4005
 
+# Common JWT configuration - profile-specific overrides in profile files
+jwt: 
+  secret: ${JWT_SECRET:myDefaultSecretKeyThatShouldBeChangedInProduction123456789}
+  cookie:
+    name: ${JWT_COOKIE_NAME:authToken}
+    secure: ${JWT_COOKIE_SECURE:false}
+    http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    same-site: ${JWT_COOKIE_SAME_SITE:Strict}
+    max-age: ${JWT_COOKIE_MAX_AGE:3600}
+    domain: ${JWT_COOKIE_DOMAIN:}
+
+# Common logging configuration
 logging:
   level:
     root: info
-    # org:
-    #   springframework: DEBUG

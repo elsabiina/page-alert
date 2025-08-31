@@ -1,0 +1,64 @@
+# Development profile configuration
+# Uses H2 in-memory database for local development
+spring:
+  profiles:
+    active: dev
+  
+  # H2 Database configuration for development
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  security:
+    enabled: false
+    headers:
+      frame: same-origin
+  datasource:
+    url: jdbc:h2:mem:authdb
+    driver-class-name: org.h2.Driver
+    username: developer
+    password: password
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  sql:
+    init:
+      mode: always
+  
+  # Kafka configuration for development (localhost)
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: auth-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: "userevent:es.oscasais.pa.auth.dto.kafka.UserEventDTO, userconfirmationevent:es.oscasais.pa.auth.dto.kafka.EmailConfirmationEventDTO"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: "userevent:es.oscasais.pa.auth.dto.kafka.UserEventDTO"
+
+server:
+  port: 4005
+
+jwt: 
+  secret: ${JWT_SECRET:myDefaultSecretKeyThatShouldBeChangedInProduction123456789}
+  cookie:
+    name: ${JWT_COOKIE_NAME:authToken}
+    secure: false  # HTTP allowed in development
+    http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    same-site: ${JWT_COOKIE_SAME_SITE:Strict}
+    max-age: ${JWT_COOKIE_MAX_AGE:3600}  # 1 hour in seconds
+    domain: ${JWT_COOKIE_DOMAIN:}  # Empty for localhost
+
+logging:
+  level:
+    root: info
+    es.oscasais.pa.auth: debug

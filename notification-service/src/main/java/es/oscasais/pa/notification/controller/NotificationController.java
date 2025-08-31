@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping("/notifications")
 @Tag(name = "Notifications", description = "API for managing email notifications")
 public class NotificationController {
 

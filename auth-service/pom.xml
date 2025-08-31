@@ -117,10 +117,6 @@
       <groupId>org.springframework.kafka</groupId>
       <artifactId>spring-kafka</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
 
   </dependencies>
 
@@ -142,7 +138,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>es.oscasais.pa.userService.AuthServiceApplication</mainClass>
+          <mainClass>es.oscasais.pa.auth.AuthServiceApplication</mainClass>
           <arguments>
           </arguments>
         </configuration>

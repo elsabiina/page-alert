@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/users/{userId}/urls")
+@RequestMapping("/urls")
 @Tag(name = "Scraper", description = "API for managing watched urls")
 public class UrlController {
   private static final Logger log = LoggerFactory.getLogger(
@@ -33,15 +33,15 @@ public class UrlController {
     this.scraperService = scraperService;
   }
 
-  @GetMapping
+  @GetMapping("/users/{userId}")
   @Operation(summary = "Get all watched urls")
-  public ResponseEntity<List<UrlDTO>> getUrlsByEmail(@PathVariable String userId) {
+  public ResponseEntity<List<UrlDTO>> getUrlsByUserId(@PathVariable String userId) {
 
     List<UrlDTO> urls = scraperService.getAllUrls(userId);
     return ResponseEntity.ok().body(urls);
   }
 
-  @PostMapping
+  @PostMapping("/users/{userId}")
   @Operation(summary = "Create new user's watched urls")
   public ResponseEntity<UrlDTO> createUrlByUserId(@PathVariable String userId, @Valid @RequestBody UrlDTO urlDTO) {
     log.info(">>> userId={} | urlDTO={}", userId, urlDTO);
@@ -50,7 +50,7 @@ public class UrlController {
     return ResponseEntity.ok().body(urlWatched);
   }
 
-  @PutMapping("/{urlId}")
+  @PutMapping("/users/{userId}/{urlId}")
   @Operation(summary = "Update a watched url")
   public ResponseEntity<UrlDTO> updateUrl(@PathVariable String userId, @PathVariable String urlId,
       @Valid @RequestBody UrlDTO urlDTO) {
@@ -59,7 +59,7 @@ public class UrlController {
   }
 
   @DeleteMapping("/{urlId}")
-  @Operation(summary = "Update a watched url")
+  @Operation(summary = "Delete a watched url")
   public ResponseEntity<Void> deleteUrl(@PathVariable String urlId) {
     scraperService.deleteUrl(urlId);
 

@@ -20,15 +20,15 @@ INSERT INTO urls (id, user_id, url, body_hash, selector, type_check, price_min, 
 SELECT *
 FROM (
     VALUES
-        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '11111111-1111-1111-1111-111111111111',
+        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'bdefbc99-9c0b-4ef8-bb6d-6bb9bd380a31',
          'https://example.com/product/1', 'hash1', '.price', 'PRICE', 10.50, 20.00),
-        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', '11111111-1111-1111-1111-111111111111',
+        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'bdefbc99-9c0b-4ef8-bb6d-6bb9bd380a31',
          'https://example.com/product/2', 'hash2', '.price', 'ANY', NULL, NULL),
-        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', '22222222-2222-2222-2222-222222222222',
+        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'bdefbc99-9c0b-4ef8-bb6d-6bb9bd380a31',
          'https://example.com/product/3', 'hash3', '.stock', 'ANY', NULL, NULL),
-        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', '22222222-2222-2222-2222-222222222222',
+        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14', 'bdefbc99-9c0b-4ef8-bb6d-6bb9bd380a31',
          'https://example.com/product/4', 'hash4', '.price', 'PRICE', 5.00, 15.00),
-        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15', '33333333-3333-3333-3333-333333333333',
+        ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15', 'bdefbc99-9c0b-4ef8-bb6d-6bb9bd380a31',
          'https://example.com/product/5', 'hash5', '.title', 'ANY', NULL, NULL)
 ) AS t(id, user_id, url, body_hash, selector, type_check, price_min, price_max)
 WHERE NOT EXISTS (SELECT 1 FROM urls);

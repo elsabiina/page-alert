@@ -17,8 +17,8 @@ WORKDIR /app
 COPY --from=builder ./app/target/user-service-0.0.1-SNAPSHOT.jar ./app.jar
 EXPOSE 4000
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # EXPOSE 4010
 # EXPOSE 5005
-# ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]

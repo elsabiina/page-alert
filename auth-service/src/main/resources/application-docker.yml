@@ -1,0 +1,65 @@
+# Docker profile configuration
+# Uses PostgreSQL database in Docker containers
+spring:
+  profiles:
+    active: docker
+  
+  # PostgreSQL Database configuration for Docker
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://auth-service-db:5432/db}
+    username: ${SPRING_DATASOURCE_USERNAME:developer}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: false
+  sql:
+    init:
+      mode: always
+  
+  # Kafka configuration for Docker (container networking)
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    consumer:
+      group-id: auth-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: "userevent:es.oscasais.pa.auth.dto.kafka.UserEventDTO, userconfirmationevent:es.oscasais.pa.auth.dto.kafka.EmailConfirmationEventDTO"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: "userevent:es.oscasais.pa.auth.dto.kafka.UserEventDTO"
+  
+  # Disable H2 console in Docker
+  h2:
+    console:
+      enabled: false
+  security:
+    enabled: false
+    headers:
+      frame: deny
+
+server:
+  port: 4005
+
+jwt: 
+  secret: ${JWT_SECRET:myDefaultSecretKeyThatShouldBeChangedInProduction123456789}
+  cookie:
+    name: ${JWT_COOKIE_NAME:authToken}
+    secure: ${JWT_COOKIE_SECURE:false}  # Set to true in production with HTTPS
+    http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    same-site: ${JWT_COOKIE_SAME_SITE:Strict}
+    max-age: ${JWT_COOKIE_MAX_AGE:3600}  # 1 hour in seconds
+    domain: ${JWT_COOKIE_DOMAIN:}  # Empty for localhost
+
+logging:
+  level:
+    root: info
+    es.oscasais.pa.auth: info

@@ -3,6 +3,8 @@ package es.oscasais.pa.userService.controller;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.oscasais.pa.userService.dto.UserRequestDTO;
 import es.oscasais.pa.userService.dto.UserResponseDTO;
+import es.oscasais.pa.userService.exception.UserNotFoundException;
 import es.oscasais.pa.userService.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
 
@@ -31,6 +33,8 @@ import jakarta.validation.groups.Default;
 public class UserController {
   // TODO: now any logged in user can do anything. Need to implement some Auth logic.
   //
+  private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+  
   private final UserService userService;
 
   public UserController(UserService userService) {
@@ -82,16 +86,33 @@ public class UserController {
   @GetMapping("/me")
   @Operation(summary = "Get the user logged in account info")
   public ResponseEntity<UserResponseDTO> getCurrentUser(HttpServletRequest request) {
-    HttpSession session = request.getSession();
+    // Get user information from JWT headers added by the API Gateway
+    String userId = request.getHeader("X-User-Id");
+    String userEmail = request.getHeader("X-User-Email");
 
-    if (session == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    logger.debug("Processing /me request with headers - X-User-Id: {}, X-User-Email: {}", userId, userEmail);
+
+    // Check if X-User-Email header is present (required for email-based lookup)
+    if (userEmail == null || userEmail.trim().isEmpty()) {
+      logger.warn("Missing or empty X-User-Email header in /me request - X-User-Email: {}", userEmail);
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    String email = (String) session.getAttribute("user");
-    UserResponseDTO user = userService.findUserByEmail(email);
-
-    return ResponseEntity.ok().body(user);
+    try {
+      // Use email-based lookup instead of UUID to handle separate database UUIDs
+      UserResponseDTO user = userService.findUserByEmail(userEmail);
+      
+      logger.debug("Successfully retrieved user info for email: {}", userEmail);
+      return ResponseEntity.ok().body(user);
+    } catch (UserNotFoundException e) {
+      // User not found by email - let GlobalExceptionHandler handle the response
+      logger.warn("User not found for email: {}", userEmail);
+      throw e;
+    } catch (Exception e) {
+      // Handle other unexpected service exceptions
+      logger.error("Unexpected error retrieving user info for email: {}", userEmail, e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
   }
 
   @PostMapping("/create-user-account")

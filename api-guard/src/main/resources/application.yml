@@ -1,61 +1,74 @@
-server:
-  port: 4010
-
+# API Gateway Main Configuration
+# Default profile is 'dev' for local development
 spring:
+  application:
+    name: api-guard
+  profiles:
+    default: dev  # Default to development profile
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
       routes:
-        #
-        # authorization-service-routes
-        #
+        # Routes configuration moved to profile-specific files
+        # dev: uses localhost URLs
+        # docker: uses container networking
+        # prod: uses production URLs
         - id: auth-service-route
-          uri: http://auth-service:4005 #/api/auth will be routed here for the auth-service
+          uri: ${DEV_URL:http://localhost}:4005
           predicates:
-            - Path=/auth/**
+            - Path=/api/auth/**
           filters:
-            - StripPrefix=1 # Will strip the `api` part becuase authcontroller listens at `/auth`
-        #
-        # user-service-routes
-        #
+            - StripPrefix=1
         - id: public-create-user-account
-          # This endpoints won't require a JWT
-          uri: http://user-service:4000
+          uri: ${DEV_URL:http://localhost}:4000
           predicates:
             - Path=/api/users/create-user-account
           filters:
             - StripPrefix=1
             - RemoveRequestHeader=Authorization
         - id: user-service-route
-          uri: http://user-service:4000 #/api/users will be routed here for the users-service
+          uri: ${DEV_URL:http://localhost}:4000
           predicates:
             - Path=/api/users/**
           filters:
-            - StripPrefix=1 # Will strip the `api` part becuase authcontroller listens at `/users`
-            - JwtValidation # Must match Srping naming convention. Request will passed to <filterName>GatewayFilterFactory
-
+            - StripPrefix=1
+            - CookieJwtValidation
         - id: scraper-service-route
-          uri: http://scraper-service:4015 #/api/users will be routed here for the users-service
+          uri: ${DEV_URL:http://localhost}:4015
           predicates:
             - Path=/api/urls/**
           filters:
-            - StripPrefix=1 # Will strip the `api` part becuase authcontroller listens at `/users`
-            # - JwtValidation # Must match Srping naming convention. Request will passed to <filterName>GatewayFilterFactory
+            - StripPrefix=1
+            - CookieJwtValidation
         - id: scraper-route
-          uri: http://scraper:5000 #/api/users will be routed here for the users-service
+          uri: ${DEV_URL:http://localhost}:5000
           predicates:
             - Path=/scraper/**
           filters:
-            - StripPrefix=1 # Will strip the `api` part becuase authcontroller listens at `/users`
-            # - JwtValidation # Must match Srping naming convention. Request will passed to <filterName>GatewayFilterFactory
+            - StripPrefix=1
 
+server:
+  port: 4010
 
+# JWT Configuration - Common settings
+jwt:
+  secret: ${JWT_SECRET:myDefaultSecretKeyThatShouldBeChangedInProduction123456789}
+  cookie:
+    name: ${JWT_COOKIE_NAME:authToken}
+    secure: ${JWT_COOKIE_SECURE:false}
+    http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    same-site: ${JWT_COOKIE_SAME_SITE:Strict}
+    max-age: ${JWT_COOKIE_MAX_AGE:86400}
+
+# CORS Configuration - Common settings
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost:8080,http://localhost:4200}
+  allowed-credentials: ${CORS_ALLOWED_CREDENTIALS:true}
+
+# Common logging configuration
 logging:
   level: 
     root: info
-    # org.springframework: debug
-    # org.hibernate: warn
-    #
 

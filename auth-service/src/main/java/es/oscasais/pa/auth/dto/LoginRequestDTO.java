@@ -13,6 +13,14 @@ public class LoginRequestDTO {
   @Size(min = 8, message = "Password must be at least 8 characters long")
   private String password;
 
+  public LoginRequestDTO() {
+  }
+
+  public LoginRequestDTO( String email, String password) {
+    this.email = email;
+    this.password = password;
+  }
+
   public String getEmail() {
     return email;
   }
