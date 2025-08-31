@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+jwt:
+  secret: test-secret-key-for-unit-tests-must-be-long-enough-for-hmac-256-algorithm-testing
+  max-age: 1800
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    es.oscasais.pa.auth: DEBUG

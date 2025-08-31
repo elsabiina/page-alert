@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class GlobalExceptionHandler extends RuntimeException {
+public class GlobalExceptionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(
       GlobalExceptionHandler.class);
@@ -61,5 +62,21 @@ public class GlobalExceptionHandler extends RuntimeException {
     Map<String, String> errors = new HashMap<>();
     errors.put("message", "User not found");
     return ResponseEntity.badRequest().body(errors);
+  }
+
+  /**
+   * Handles authentication exceptions such as database errors during authentication.
+   * 
+   * @param ex the authentication exception
+   * @return a {@link ResponseEntity} with HTTP status 500 (Internal Server Error)
+   */
+  @ExceptionHandler(AuthenticationException.class)
+  public ResponseEntity<Map<String, String>> handleAuthenticationException(
+      AuthenticationException ex) {
+    log.error("Authentication error occurred: {}", ex.getMessage(), ex);
+
+    Map<String, String> errors = new HashMap<>();
+    errors.put("message", "Authentication failed due to system error");
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
   }
 }
